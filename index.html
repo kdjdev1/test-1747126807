@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>සූර්යයා බලශක්ති - ශ්‍රී ලංකාවේ විශ්වාසනීය සූර්ය විසඳුම්</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.2/p5.min.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;600;700;800&family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0px 2px 4px rgba(0,0,0,0.4);
+            }
+            .text-shadow-md {
+                text-shadow: 0px 3px 6px rgba(0,0,0,0.3);
+            }
+            .text-shadow-lg {
+                text-shadow: 0px 5px 10px rgba(0,0,0,0.3);
+            }
+            .clip-path-hero {
+                clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+            }
+             .clip-path-footer {
+                clip-path: polygon(0 10%, 100% 0, 100% 100%, 0 100%);
+            }
+            .glassmorphism {
+                background: rgba(41, 56, 79, 0.6); /* Adjusted for better readability on slate-800/900 */
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            .service-detail-page {
+                @apply min-h-screen py-24 md:py-32 bg-slate-800;
+            }
+            .why-choose-us-card {
+                @apply bg-slate-800 p-6 rounded-xl shadow-xl hover:shadow-sky-500/30 transition-all duration-300 transform hover:-translate-y-1;
+            }
+            .why-choose-us-icon {
+                @apply w-12 h-12 md:w-16 md:h-16 mb-4 inline-flex items-center justify-center rounded-full text-sky-400 bg-slate-700 text-2xl md:text-3xl;
+            }
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', 'Noto Sans Sinhala', sans-serif;
+            @apply bg-slate-900 text-slate-200;
+            overflow-x: hidden;
+        }
+        h1, h2, h3, h4, h5, h6, .nav-link, .nav-link-mobile, button, input::placeholder, textarea::placeholder, label, .section-subtitle, p, .company-name, .loader-text, .btn {
+            font-family: 'Poppins', 'Noto Sans Sinhala', sans-serif;
+        }
+        .hero-p5-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        #hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.5), rgba(15, 23, 42, 0.85)); /* Darker gradient for better text pop */
+            z-index: 1;
+        }
+        #hero .relative.z-10 {
+            z-index: 2;
+        }
+        .section-title {
+            @apply text-4xl md:text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500;
+        }
+        .section-subtitle {
+            @apply text-lg md:text-xl text-slate-400 mb-12 max-w-3xl mx-auto; /* Increased max-width for subtitle */
+        }
+        .feature-icon { /* For service cards */
+            @apply w-16 h-16 mb-4 inline-flex items-center justify-center rounded-full text-amber-400 bg-slate-800 shadow-lg;
+        }
+        .process-step {
+            @apply relative flex items-center justify-center w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-amber-500 bg-slate-800 text-amber-400 text-3xl md:text-4xl font-bold shadow-xl;
+        }
+        .process-line {
+            @apply hidden sm:block h-1 w-full bg-slate-700;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #fbbf24;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f59e0b;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FFA500', 
+                        secondary: '#FFD700',
+                        accent: '#10B981', 
+                        darkBg: '#0F172A', 
+                        lightText: '#E2E8F0', 
+                        mediumText: '#94A3B8',
+                        sky: { // Adding sky color for corporate accents
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans Sinhala', 'sans-serif'],
+                        heading: ['Poppins', 'Noto Sans Sinhala', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'subtle-pulse': 'subtlePulse 2s infinite ease-in-out',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        subtlePulse: {
+                            '0%, 100%': { transform: 'scale(1)' },
+                            '50%': { transform: 'scale(1.03)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-darkBg text-lightText">
+
+    <div id="page-loader" class="fixed inset-0 bg-darkBg z-[100] flex flex-col items-center justify-center transition-opacity duration-500 ease-out">
+        <div class="w-16 h-16 border-4 border-amber-400 border-t-transparent rounded-full animate-spin"></div>
+        <p class="mt-4 text-lg text-amber-400 loader-text">පූරණය වෙමින් පවතී...</p>
+    </div>
+
+    <header id="main-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out">
+        <nav class="container mx-auto px-6 py-3">
+            <div class="flex items-center justify-between">
+                <a href="#" onclick="navigateToMainSection('#hero')" class="text-3xl font-bold text-white cursor-pointer">
+                    <span class="text-amber-400 company-name">සූර්ය</span><span class="text-orange-500 company-name">යා</span>
+                </a>
+                <div class="hidden md:flex space-x-6 items-center">
+                    <a href="#hero" class="nav-link">මුල් පිටුව</a>
+                    <a href="#about" class="nav-link">අප ගැන</a>
+                    <a href="#services" class="nav-link">අපගේ සේවාවන්</a>
+                    <a href="#why-choose-us" class="nav-link">අපව තෝරාගැනීම</a>
+                    <a href="#process" class="nav-link">ක්‍රියාවලිය</a>
+                    <a href="#calculator" class="nav-link">ඉතුරුම් ගණකය</a>
+                    <a href="#contact" class="nav-link">අමතන්න</a>
+                    <a href="#contact" class="nav-link-cta px-6 py-2 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-full hover:from-amber-600 hover:to-orange-700 transition-all duration-300 shadow-lg animate-subtle-pulse btn">මිල ගණන්</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-white focus:outline-none">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-800 bg-opacity-90 backdrop-blur-md">
+            <a href="#hero" class="block py-3 px-6 text-center nav-link-mobile">මුල් පිටුව</a>
+            <a href="#about" class="block py-3 px-6 text-center nav-link-mobile">අප ගැන</a>
+            <a href="#services" class="block py-3 px-6 text-center nav-link-mobile">අපගේ සේවාවන්</a>
+            <a href="#why-choose-us" class="block py-3 px-6 text-center nav-link-mobile">අපව තෝරාගැනීම</a>
+            <a href="#process" class="block py-3 px-6 text-center nav-link-mobile">ක්‍රියාවලිය</a>
+            <a href="#calculator" class="block py-3 px-6 text-center nav-link-mobile">ඉතුරුම් ගණකය</a>
+            <a href="#contact" class="block py-3 px-6 text-center nav-link-mobile">අමතන්න</a>
+            <a href="#contact" class="nav-link-cta block py-3 px-6 my-2 mx-auto w-fit bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-full hover:from-amber-600 hover:to-orange-700 transition-all duration-300 shadow-lg btn">මිල ගණන්</a>
+        </div>
+    </header>
+
+    <div id="main-content-wrapper">
+        <section id="hero" class="relative min-h-screen flex items-center justify-center text-center text-white overflow-hidden clip-path-hero">
+            <div id="hero-canvas-container" class="hero-p5-canvas"></div>
+            <div class="relative z-10 p-6 animate-fade-in-up">
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold mb-6 text-shadow-lg">
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-orange-400 to-red-500">
+                        තිරසාර අනාගතයකට
+                    </span><br> සූර්ය බලයෙන් පියවරක්
+                </h1>
+                <p class="text-xl md:text-2xl mb-10 max-w-3xl mx-auto text-slate-200 text-shadow-md">
+                    ශ්‍රී ලංකාවේ ප්‍රමුඛතම සූර්ය බලශක්ති විසඳුම් සමගින් ඔබේ බලශක්ති පිරිවැය අඩුකර, හරිත හෙට දවසකට දායක වන්න.
+                </p>
+                <div class="space-x-4">
+                    <a href="#services" class="px-8 py-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white text-lg font-semibold rounded-full hover:from-amber-600 hover:to-orange-700 transition-all duration-300 shadow-xl transform hover:scale-105 btn">අපේ සේවාවන්</a>
+                    <a href="#contact" class="px-8 py-3 bg-transparent border-2 border-amber-400 text-amber-400 text-lg font-semibold rounded-full hover:bg-amber-400 hover:text-darkBg transition-all duration-300 shadow-xl transform hover:scale-105 btn">අපව අමතන්න</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="py-20 md:py-32">
+            <div class="container mx-auto px-6">
+                <div class="text-center">
+                    <h2 class="section-title" data-aos="fade-up">අප කවුද?</h2>
+                    <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">
+                        සූර්යයා බලශක්ති (පුද්ගලික) සමාගම යනු ශ්‍රී ලංකාව තුළ පුනර්ජනනීය බලශක්ති විසඳුම් සඳහා නවෝත්පාදන සහ ගුණාත්මකභාවය පෙරදැරි කරගත්, පාරිභෝගික විශ්වාසය දිනූ ආයතනයකි.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-12 items-center mt-16">
+                    <div data-aos="fade-right" data-aos-delay="200">
+                        <h3 class="text-3xl font-bold mb-6 text-orange-400">අපගේ දැක්ම සහ මෙහෙවර</h3>
+                        <p class="mb-4 text-slate-300">
+                            අපගේ දැක්ම වන්නේ ශ්‍රී ලංකාවේ සෑම නිවසක් සහ ව්‍යාපාරයක්ම සූර්ය බලශක්තියෙන් බලගන්වා, තිරසාර බලශක්ති ස්වාධීනත්වයක් රට තුළ ඇති කිරීමයි.
+                        </p>
+                        <p class="mb-4 text-slate-300">
+                            අපගේ මෙහෙවර වන්නේ උසස්ම තත්ත්වයේ සූර්ය පැනල, නවීන තාක්ෂණය, සහ අසමසම පාරිභෝගික සේවාවක් තුළින් විශ්වාසනීය සහ ලාභදායී සූර්ය බලශක්ති විසඳුම් සැපයීමයි.
+                        </p>
+                        <ul class="space-y-3 mt-6 text-slate-300">
+                            <li class="flex items-center"><svg class="w-6 h-6 text-green-400 mr-3 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> වසර ගණනාවක ක්ෂේත්‍රයේ පළපුරුද්ද</li>
+                            <li class="flex items-center"><svg class="w-6 h-6 text-green-400 mr-3 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> ජාත්‍යන්තර ප්‍රමිතීන්ට අනුකූල නිෂ්පාදන</li>
+                            <li class="flex items-center"><svg class="w-6 h-6 text-green-400 mr-3 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> කැපවූ සහ පුහුණු කාර්ය මණ්ඩලය</li>
+                        </ul>
+                    </div>
+                    <div class="p-8 rounded-lg glassmorphism shadow-2xl" data-aos="fade-left" data-aos-delay="300">
+                        <div class="w-full h-72 bg-slate-700 rounded-md flex items-center justify-center">
+                            <p class="text-slate-500 text-lg">අපගේ වටිනාකම් / සංඛ්‍යාලේඛන මෙතැනට</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="services" class="py-20 md:py-32 bg-slate-800">
+            <div class="container mx-auto px-6">
+                <div class="text-center">
+                    <h2 class="section-title" data-aos="fade-up">අප සපයන සේවාවන්</h2>
+                    <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">
+                        ඔබේ නිශ්චිත බලශක්ති අවශ්‍යතාවයන්ට සරිලන පරිදි පුළුල් පරාසයක සූර්ය බලශක්ති විසඳුම්.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
+                    <div class="p-8 rounded-xl shadow-2xl hover:shadow-amber-500/30 transition-shadow duration-300 transform hover:-translate-y-2 glassmorphism" data-aos="fade-up" data-aos-delay="200">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-1.5m-15-13.5H18M15 7.5h3M4.5 7.5H6" /></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3 text-amber-400">නේවාසික සූර්ය පද්ධති</h3>
+                        <p class="text-slate-300 mb-4">ඔබේ නිවසට ගැලපෙන On-Grid, Off-Grid, සහ Hybrid සූර්ය පද්ධති. විදුලි බිලට තිත තබා, බලශක්ති ස්වාධීනත්වය ලබන්න.</p>
+                        <button onclick="navigateToServicePage('residential')" class="font-semibold text-orange-500 hover:text-orange-400 transition-colors bg-transparent border-none p-0 cursor-pointer btn">වැඩි විස්තර →</button>
+                    </div>
+                    <div class="p-8 rounded-xl shadow-2xl hover:shadow-amber-500/30 transition-shadow duration-300 transform hover:-translate-y-2 glassmorphism" data-aos="fade-up" data-aos-delay="300">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h6.375a1.125 1.125 0 011.125 1.125v1.125a1.125 1.125 0 01-1.125 1.125H9A1.125 1.125 0 017.875 9V7.875A1.125 1.125 0 019 6.75zM9.75 12h4.5m-4.5 3h4.5m-4.5 3h4.5" /></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3 text-amber-400">වාණිජ සහ කර්මාන්තශාලා</h3>
+                        <p class="text-slate-300 mb-4">ඔබේ ව්‍යාපාරයේ හෝ කර්මාන්තශාලාවේ මෙහෙයුම් පිරිවැය අඩුකර, ලාභදායීත්වය ඉහළ නංවන මහා පරිමාණ සූර්ය විසඳුම්.</p>
+                        <button onclick="navigateToServicePage('commercial')" class="font-semibold text-orange-500 hover:text-orange-400 transition-colors bg-transparent border-none p-0 cursor-pointer btn">වැඩි විස්තර →</button>
+                    </div>
+                    <div class="p-8 rounded-xl shadow-2xl hover:shadow-amber-500/30 transition-shadow duration-300 transform hover:-translate-y-2 glassmorphism" data-aos="fade-up" data-aos-delay="400">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.528-1.032.06-2.29-.976-2.818l-2.818-.976-.976-2.818c-.528-1.032-1.786-1.49-2.818-.976l-3.03 2.496m6.93 6.93l-2.496 3.03c-1.032.528-2.29.06-2.818-.976l-.976-2.818-2.818-.976c-1.032-.528-1.49-1.786-.976-2.818l3.03-2.496m6.93 6.93z" /></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3 text-amber-400">නඩත්තුව සහ සහාය</h3>
+                        <p class="text-slate-300 mb-4">ස්ථාපිත සූර්ය පද්ධති සඳහා අඛණ්ඩ නඩත්තු සේවා, අළුත්වැඩියා කිරීම් සහ තාක්ෂණික සහාය. ඔබේ ආයෝජනයේ උපරිම ප්‍රතිලාභ තහවුරු කරන්න.</p>
+                        <button onclick="navigateToServicePage('maintenance')" class="font-semibold text-orange-500 hover:text-orange-400 transition-colors bg-transparent border-none p-0 cursor-pointer btn">වැඩි විස්තර →</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="why-choose-us" class="py-20 md:py-32">
+            <div class="container mx-auto px-6">
+                <div class="text-center">
+                    <h2 class="section-title" data-aos="fade-up">අපව තෝරාගත යුත්තේ ඇයි?</h2>
+                    <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">
+                        ඔබේ සූර්ය බලශක්ති අවශ්‍යතා සඳහා අපව තෝරා ගැනීමට හේතු කිහිපයක්.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
+                    <div class="why-choose-us-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="why-choose-us-icon">
+                            <i class="fas fa-award"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3 text-sky-400">විශ්වාසනීය ගුණාත්මකභාවය</h3>
+                        <p class="text-slate-300">අපි ජාත්‍යන්තර ප්‍රමිතීන්ට අනුකූල, ඉහළම ගුණාත්මකභාවයෙන් යුතු සූර්ය පැනල සහ උපාංග පමණක් භාවිතා කරන්නෙමු. ඔබේ ආයෝජනයට උපරිම වටිනාකමක්.</p>
+                    </div>
+                    <div class="why-choose-us-card" data-aos="fade-up" data-aos-delay="300">
+                        <div class="why-choose-us-icon">
+                           <i class="fas fa-users-cog"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3 text-sky-400">විශේෂඥ කණ්ඩායම</h3>
+                        <p class="text-slate-300">වසර ගණනාවක පළපුරුද්ද සහ පුළුල් දැනුම සහිත අපගේ ඉංජිනේරුවන් සහ කාර්මික ශිල්පීන් ඔබේ අවශ්‍යතාවයටම ගැලපෙන විසඳුම ලබා දීමට සූදානම්.</p>
+                    </div>
+                    <div class="why-choose-us-card" data-aos="fade-up" data-aos-delay="400">
+                        <div class="why-choose-us-icon">
+                            <i class="fas fa-handshake-angle"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3 text-sky-400">පාරිභෝගික කේන්ද්‍රීය සේවය</h3>
+                        <p class="text-slate-300">ඔබේ අවශ්‍යතා හඳුනාගැනීමේ සිට, ස්ථාපනය සහ අලෙවියෙන් පසු සේවාව දක්වා සෑම පියවරකදීම මිත්‍රශීලී සහ කාර්යක්ෂම සේවාවක්.</p>
+                    </div>
+                    <div class="why-choose-us-card" data-aos="fade-up" data-aos-delay="500">
+                        <div class="why-choose-us-icon">
+                            <i class="fas fa-solar-panel"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3 text-sky-400">නවීන තාක්ෂණය</h3>
+                        <p class="text-slate-300">සූර්ය බලශක්ති ක්ෂේත්‍රයේ නවතම තාක්ෂණික දියුණුව සමගින්, ඉහළ කාර්යක්ෂමතාවක් සහ දිගුකාලීන පැවැත්මක් සහිත විසඳුම්.</p>
+                    </div>
+                     <div class="why-choose-us-card" data-aos="fade-up" data-aos-delay="600">
+                        <div class="why-choose-us-icon">
+                           <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3 text-sky-400">සාර්ථකත්වයේ මං සලකුණු</h3>
+                        <p class="text-slate-300">දිවයින පුරා අප විසින් සාර්ථකව නිම කරන ලද නේවාසික සහ වාණිජ ව්‍යාපෘති රැසක් අපගේ සේවාවේ ගුණාත්මකභාවයට සාක්ෂි දරයි.</p>
+                    </div>
+                     <div class="why-choose-us-card" data-aos="fade-up" data-aos-delay="700">
+                        <div class="why-choose-us-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3 text-sky-400">පරිසර හිතකාමීත්වය</h3>
+                        <p class="text-slate-300">පුනර්ජනනීය බලශක්තිය ප්‍රවර්ධනය කරමින්, හරිත හෙට දවසක් සඳහා අප හා එක්වන්න. ඔබේ කාබන් පියසටහන අඩුකරගන්න.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="process" class="py-20 md:py-32 bg-slate-800">
+            <div class="container mx-auto px-6">
+                <div class="text-center">
+                    <h2 class="section-title" data-aos="fade-up">අපගේ සරල ක්‍රියාවලිය</h2>
+                    <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">
+                        ඔබේ සූර්ය සිහිනය යථාර්ථයක් බවට පත්කිරීමට අප අනුගමනය කරන පියවර.
+                    </p>
+                </div>
+                <div class="mt-16">
+                    <div class="flex flex-col sm:flex-row items-center justify-between space-y-8 sm:space-y-0 sm:space-x-4">
+                        <div class="flex flex-col items-center text-center" data-aos="fade-up" data-aos-delay="200">
+                            <div class="process-step">1</div>
+                            <h4 class="text-xl font-semibold mt-6 mb-2 text-amber-400">උපදේශනය</h4>
+                            <p class="text-slate-400 max-w-xs">ඔබේ අවශ්‍යතා සහ ස්ථානය පිළිබඳව නොමිලේ උපදේශනය.</p>
+                        </div>
+                        <div class="process-line" data-aos="fade-up" data-aos-delay="250"></div>
+                        <div class="flex flex-col items-center text-center" data-aos="fade-up" data-aos-delay="300">
+                            <div class="process-step">2</div>
+                            <h4 class="text-xl font-semibold mt-6 mb-2 text-amber-400">සැලසුම් කිරීම</h4>
+                            <p class="text-slate-400 max-w-xs">ප්‍රශස්ත පද්ධතියක් සඳහා ඉංජිනේරුමය සැලසුම්කරණය.</p>
+                        </div>
+                        <div class="process-line" data-aos="fade-up" data-aos-delay="350"></div>
+                        <div class="flex flex-col items-center text-center" data-aos="fade-up" data-aos-delay="400">
+                            <div class="process-step">3</div>
+                            <h4 class="text-xl font-semibold mt-6 mb-2 text-amber-400">ස්ථාපනය</h4>
+                            <p class="text-slate-400 max-w-xs">සුදුසුකම් ලත් කාර්මික ශිල්පීන් විසින් ස්ථාපනය කිරීම.</p>
+                        </div>
+                        <div class="process-line" data-aos="fade-up" data-aos-delay="450"></div>
+                        <div class="flex flex-col items-center text-center" data-aos="fade-up" data-aos-delay="500">
+                            <div class="process-step">4</div>
+                            <h4 class="text-xl font-semibold mt-6 mb-2 text-amber-400">සහයෝගය</h4>
+                            <p class="text-slate-400 max-w-xs">අඛණ්ඩ නඩත්තුව සහ අලෙවියෙන් පසු සේවාව.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="calculator" class="py-20 md:py-32">
+            <div class="container mx-auto px-6">
+                <div class="text-center">
+                    <h2 class="section-title" data-aos="fade-up">ඔබේ ඉතිරිය ගණනය කරන්න</h2>
+                    <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">
+                        සූර්ය බලශක්තියට මාරුවීමෙන් ඔබට කොපමණ මුදලක් ඉතිරි කරගත හැකිදැයි බලන්න.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-12 items-center mt-16">
+                    <div class="p-8 rounded-xl shadow-2xl glassmorphism" data-aos="fade-right" data-aos-delay="200">
+                        <h3 class="text-2xl font-bold mb-6 text-amber-400">ඉතුරුම් ගණනය කිරීමේ පෝරමය</h3>
+                        <form id="savings-calculator-form" class="space-y-6">
+                            <div>
+                                <label for="current-bill" class="block text-sm font-medium text-slate-300 mb-1">ඔබේ මාසික විදුලි බිල (රු.)</label>
+                                <input type="number" id="current-bill" name="current-bill" class="w-full p-3 rounded-md bg-slate-700 border border-slate-600 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none text-slate-100" placeholder="උදා: 5000" required>
+                            </div>
+                            <div>
+                                <label for="sunlight-hours" class="block text-sm font-medium text-slate-300 mb-1">සාමාන්‍ය දෛනික හිරු එළිය (පැය)</label>
+                                <select id="sunlight-hours" name="sunlight-hours" class="w-full p-3 rounded-md bg-slate-700 border border-slate-600 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none text-slate-100">
+                                    <option value="4">පැය 4 (අඩු)</option>
+                                    <option value="5" selected>පැය 5 (සාමාන්‍ය)</option>
+                                    <option value="6">පැය 6 (ඉහළ)</option>
+                                </select>
+                            </div>
+                             <div>
+                                <label for="system-efficiency" class="block text-sm font-medium text-slate-300 mb-1">පද්ධති කාර්යක්ෂමතාව (%)</label>
+                                <input type="range" id="system-efficiency" name="system-efficiency" min="70" max="90" value="80" class="w-full h-2 bg-slate-600 rounded-lg appearance-none cursor-pointer accent-amber-500">
+                                <div class="text-right text-sm text-slate-400"><span id="system-efficiency-value">80</span>%</div>
+                            </div>
+                            <button type="submit" class="w-full px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-semibold rounded-md hover:from-amber-600 hover:to-orange-700 transition-all duration-300 shadow-lg btn">ගණනය කරන්න</button>
+                        </form>
+                    </div>
+                    <div class="text-center" data-aos="fade-left" data-aos-delay="300">
+                        <h3 class="text-2xl font-bold mb-4 text-amber-400">ඇස්තමේන්තුගත ඉතිරිකිරීම්</h3>
+                        <div id="savings-results" class="p-6 rounded-xl bg-slate-700 shadow-xl min-h-[200px] flex flex-col items-center justify-center">
+                            <p class="text-lg text-slate-400">කරුණාකර ඔබේ තොරතුරු ඇතුළත් කරන්න.</p>
+                            <div id="savings-visualization" class="mt-4 w-full h-24"></div>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-4">*මෙය දළ ඇස්තමේන්තුවක් පමණි. නිශ්චිත ගණනය කිරීමක් සඳහා අපව අමතන්න.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="py-20 md:py-32 relative overflow-hidden bg-slate-800">
+             <div class="absolute inset-0 opacity-10">
+                </div>
+            <div class="container mx-auto px-6 relative z-10">
+                <div class="text-center">
+                    <h2 class="section-title" data-aos="fade-up">සූර්ය බලශක්ති විප්ලවයට එක්වන්න!</h2>
+                    <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">
+                        ඔබේ සූර්ය බලශක්ති ව්‍යාපෘතිය ආරම්භ කිරීමට අදම අප හා සම්බන්ධ වන්න. නොමිලේ උපදේශනය සහ මිල ගණන් ලබාගන්න.
+                    </p>
+                </div>
+                <div class="max-w-2xl mx-auto mt-12 p-8 md:p-12 rounded-xl shadow-2xl glassmorphism" data-aos="fade-up" data-aos-delay="200">
+                    <form id="contact-form" class="space-y-6">
+                        <div>
+                            <label for="contact-name" class="block text-sm font-medium text-slate-300 mb-1">ඔබගේ නම</label>
+                            <input type="text" id="contact-name" name="name" required class="w-full p-3 rounded-md bg-slate-700 border border-slate-600 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none text-slate-100" placeholder="උදා: කසුන් පෙරේරා">
+                        </div>
+                        <div class="grid sm:grid-cols-2 gap-6">
+                            <div>
+                                <label for="contact-email" class="block text-sm font-medium text-slate-300 mb-1">විද්‍යුත් තැපෑල</label>
+                                <input type="email" id="contact-email" name="email" required class="w-full p-3 rounded-md bg-slate-700 border border-slate-600 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none text-slate-100" placeholder="udaharana@email.com">
+                            </div>
+                            <div>
+                                <label for="contact-phone" class="block text-sm font-medium text-slate-300 mb-1">දුරකථන අංකය</label>
+                                <input type="tel" id="contact-phone" name="phone" required class="w-full p-3 rounded-md bg-slate-700 border border-slate-600 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none text-slate-100" placeholder="07X XXX XXXX">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="contact-message" class="block text-sm font-medium text-slate-300 mb-1">ඔබේ පණිවිඩය</label>
+                            <textarea id="contact-message" name="message" rows="5" required class="w-full p-3 rounded-md bg-slate-700 border border-slate-600 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none text-slate-100" placeholder="ඔබේ විමසුම හෝ අවශ්‍යතාවය මෙහි සටහන් කරන්න..."></textarea>
+                        </div>
+                        <div>
+                            <button type="submit" class="w-full px-8 py-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white text-lg font-semibold rounded-md hover:from-amber-600 hover:to-orange-700 transition-all duration-300 shadow-xl transform hover:scale-105 btn">ඉල්ලීම යවන්න</button>
+                        </div>
+                    </form>
+                     <div id="form-submission-status" class="mt-4 text-center"></div>
+                </div>
+                 <div class="mt-16 text-center text-slate-400" data-aos="fade-up" data-aos-delay="300">
+                    <p class="text-xl mb-2">නැතහොත්, අපව කෙලින්ම අමතන්න:</p>
+                    <p class="text-2xl font-semibold text-amber-400 mb-1"><a href="tel:+94712345678" class="hover:underline">+94 71 234 5678</a></p> <p class="text-lg"><a href="mailto:info@suryaya.lk" class="hover:underline">info@suryaya.lk</a></p> <p class="text-lg mt-2">නො. 123, ගාලු පාර, කොළඹ 03, ශ්‍රී ලංකාව</p> </div>
+            </div>
+        </section>
+    </div> 
+    <div id="service-detail-residential" class="service-detail-page hidden">
+        <div class="container mx-auto px-6">
+            <button onclick="navigateToMainSection('#services')" class="mb-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-amber-600 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 btn">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                ආපසු සේවාවන් වෙත
+            </button>
+            <h2 class="text-4xl md:text-5xl font-bold text-amber-400 mb-4 text-center">නේවාසික සූර්ය පද්ධති</h2>
+            <p class="text-lg text-slate-400 mb-12 max-w-2xl mx-auto text-center">ඔබේ නිවසට සරිලන, බලශක්ති ස්වාධීනත්වය සහ ඉතිරිය ගෙනෙන සූර්ය විසඳුම්.</p>
+            
+            <div class="space-y-10 text-slate-300">
+                <div>
+                    <h3 class="text-3xl font-semibold text-orange-400 mb-4 border-b-2 border-orange-400 pb-2">On-Grid පද්ධති</h3>
+                    <p class="mb-3">ජාතික විදුලි බල පද්ධතියට සම්බන්ධ මෙම පද්ධති මගින් ඔබ නිපදවන අතිරික්ත විදුලිය ජාතික පද්ධතියට අලෙවි කිරීමේ හැකියාව ලැබේ. මාසික විදුලි බිල සැලකිය යුතු ලෙස අඩු කර ගැනීමට මෙය කදිම විසඳුමකි.</p>
+                    <h4 class="text-xl font-semibold text-sky-400 mt-6 mb-2">ප්‍රධාන ලක්ෂණ සහ වාසි:</h4>
+                    <ul class="list-disc list-inside mb-4 space-y-1 pl-4">
+                        <li>විදුලි බිල අඩු වීම සහ ස්ථාවර බලශක්ති පිරිවැය.</li>
+                        <li>අතිරික්ත විදුලිය සඳහා ආදායම් (Net Metering / Net Accounting).</li>
+                        <li>පරිසර හිතකාමී, කාබන් පියසටහන අවම කිරීම.</li>
+                        <li>සාපේක්ෂව අඩු ආරම්භක ආයෝජනය සහ නඩත්තු වියදම්.</li>
+                        <li>දිගුකාලීන පැවැත්ම සහ ඉහළ කාර්යක්ෂමතාව.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-3xl font-semibold text-orange-400 mb-4 border-b-2 border-orange-400 pb-2">Off-Grid පද්ධති</h3>
+                    <p class="mb-3">ජාතික විදුලි සැපයුමෙන් සම්පූර්ණයෙන්ම ස්වාධීන වීමට කැමති අයට මෙම පද්ධති වඩාත් සුදුසුය. බැටරි පද්ධතියක් මගින් දිවා කාලයේ නිපදවන විදුලිය රාත්‍රී කාලයේ භාවිතය සඳහා ගබඩා කර ගනී.</p>
+                     <h4 class="text-xl font-semibold text-sky-400 mt-6 mb-2">ප්‍රධාන ලක්ෂණ සහ වාසි:</h4>
+                    <ul class="list-disc list-inside mb-4 space-y-1 pl-4">
+                        <li>සම්පූර්ණ බලශක්ති ස්වාධීනත්වය, විදුලි කප්පාදුවලින් තොර වීම.</li>
+                        <li>දුෂ්කර සහ ජාතික පද්ධතියට සම්බන්ධ නැති ප්‍රදේශ සඳහා වඩාත් සුදුසුය.</li>
+                        <li>දිවා/රාත්‍රී අඛණ්ඩ බලශක්ති සැපයුම.</li>
+                        <li>අවශ්‍යතාවය අනුව පද්ධතිය පුළුල් කිරීමේ හැකියාව.</li>
+                    </ul>
+                    <p class="text-sm text-slate-500"><em>සැලකිය යුතුයි: Off-Grid පද්ධති සඳහා බැටරි නඩත්තුව සහ ආදේශ කිරීම අවශ්‍ය විය හැක.</em></p>
+                </div>
+                <div>
+                     <h3 class="text-3xl font-semibold text-orange-400 mb-4 border-b-2 border-orange-400 pb-2">Hybrid පද්ධති</h3>
+                    <p class="mb-3">මෙය On-Grid සහ Off-Grid පද්ධති දෙකෙහිම වාසි එක්කරගත් විසඳුමකි. ජාතික පද්ධතියට සම්බන්ධව සිටින අතරම, බැටරි මගින් විදුලිය ගබඩා කර ගැනීමේ හැකියාවද පවතී. විදුලි කප්පාදුවකදී වුවද අඛණ්ඩ විදුලි සැපයුමක් සහතික කරයි.</p>
+                    <h4 class="text-xl font-semibold text-sky-400 mt-6 mb-2">ප්‍රධාන ලක්ෂණ සහ වාසි:</h4>
+                    <ul class="list-disc list-inside mb-4 space-y-1 pl-4">
+                        <li>On-Grid සහ Off-Grid දෙකෙහිම උපරිම වාසි.</li>
+                        <li>විදුලි කප්පාදුවකදී ස්වයංක්‍රීයව බැටරි බලයට මාරුවීම.</li>
+                        <li>විදුලි බිල ඉතිරිය, ආදායම් අවස්ථා සහ බලශක්ති සුරක්ෂිතභාවය.</li>
+                        <li>ඔබේ බලශක්ති භාවිතය කළමනාකරණයට වැඩි නම්‍යශීලී බවක්.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-12 p-8 rounded-lg glassmorphism">
+                <h4 class="text-2xl font-semibold text-amber-300 mb-3 text-center">අපෙන් ඔබට ලැබෙන විශේෂ සේවාවන්:</h4>
+                <p class="text-slate-300 text-center">නොමිලේ ස්ථාන පරීක්ෂාව සහ උපදේශනය, වසර 25ක් දක්වා සූර්ය පැනල සඳහා කාර්ය සාධන වගකීම, ඉන්වර්ටර් සඳහා වසර 5-10 වගකීම, පහසු ගෙවීමේ ක්‍රම සහ අලෙවියෙන් පසු විශිෂ්ට සේවාව.</p>
+                <div class="text-center mt-6">
+                     <button onclick="navigateToMainSection('#contact')" class="px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-lg font-semibold rounded-full hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-xl transform hover:scale-105 btn">දැන්ම මිල ගණන් විමසන්න</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="service-detail-commercial" class="service-detail-page hidden">
+        <div class="container mx-auto px-6">
+            <button onclick="navigateToMainSection('#services')" class="mb-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-amber-600 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 btn">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                ආපසු සේවාවන් වෙත
+            </button>
+            <h2 class="text-4xl md:text-5xl font-bold text-amber-400 mb-4 text-center">වාණිජ සහ කර්මාන්තශාලා සඳහා සූර්ය විසඳුම්</h2>
+            <p class="text-lg text-slate-400 mb-12 max-w-2xl mx-auto text-center">ඔබේ ව්‍යාපාරයේ මෙහෙයුම් පිරිවැය සැලකිය යුතු ලෙස අඩු කරගැනීමටත්, ආයෝජනයට ඉහළ ප්‍රතිලාභ ලබාගැනීමටත්, පරිසර හිතකාමී ව්‍යාපාරයක් ලෙස ඉදිරියට ඒමටත් අපගේ වාණිජ සූර්ය පද්ධති ඔබට උපකාරී වනු ඇත.</p>
+            
+            <div class="space-y-10 text-slate-300">
+                <div>
+                    <h3 class="text-3xl font-semibold text-orange-400 mb-4 border-b-2 border-orange-400 pb-2">ප්‍රධාන වාසි:</h3>
+                    <ul class="list-disc list-inside space-y-2 pl-4 text-lg">
+                        <li>විදුලි බිලෙන් විශාල ඉතිරියක් සහ ස්ථාවර, පුරෝකථනය කළ හැකි බලශක්ති පිරිවැයක්.</li>
+                        <li>ඔබේ ආයෝජනයට ඉහළ ප්‍රතිලාභ (Return on Investment - ROI) සහ කෙටි ආපසු ගෙවීමේ කාලයක්.</li>
+                        <li>කාබන් පියසටහන අඩු කරමින්, ආයතනික සමාජ වගකීම (CSR) ඉහළ නැංවීම සහ හරිත ව්‍යාපාර ප්‍රතිරූපයක්.</li>
+                        <li>රාජ්‍ය අනුග්‍රහය, බදු සහන සහ මූල්‍යකරණ විකල්ප (අදාළ වන පරිදි).</li>
+                        <li>අඩු නඩත්තු වියදම් සහ දශක ගණනාවක් පවතින දිගුකාලීන විසඳුමක්.</li>
+                        <li>බලශක්ති මිල උච්චාවචනයන්ගෙන් ආරක්ෂාවක්.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-3xl font-semibold text-orange-400 mb-4 border-b-2 border-orange-400 pb-2">අපෙන් සැපයෙන විශේෂිත සේවාවන්:</h3>
+                    <p class="mb-3 text-lg">කුඩා පරිමාණ කාර්යාල සංකීර්ණ වල සිට මහා පරිමාණ කර්මාන්තශාලා, ගබඩා සංකීර්ණ, කෘෂිකාර්මික ව්‍යාපෘති දක්වා ඕනෑම වාණිජ අවශ්‍යතාවයකට සරිලන පරිදි:</p>
+                    <ul class="list-disc list-inside space-y-2 pl-4">
+                        <li>සවිස්තරාත්මක ස්ථාන පරීක්ෂාව සහ බලශක්ති විගණනය.</li>
+                        <li>ප්‍රශස්ත පද්ධති සැලසුම්කරණය සහ ඉංජිනේරුමය ඇගයීම.</li>
+                        <li>උසස් තත්ත්වයේ Tier-1 සූර්ය පැනල, ඉන්වර්ටර් සහ සවිකිරීම් පද්ධති සැපයීම.</li>
+                        <li>වෘත්තීය මට්ටමේ, ආරක්ෂිත සහ කඩිනම් ස්ථාපනය.</li>
+                        <li>පද්ධති ක්‍රියාත්මක කිරීම සහ ජාතික පද්ධතියට සම්බන්ධීකරණය.</li>
+                        <li>අඛණ්ඩ නිරීක්ෂණය, නඩත්තුව සහ තාක්ෂණික සහාය.</li>
+                    </ul>
+                </div>
+                 <div class="mt-12 p-8 rounded-lg glassmorphism">
+                    <h4 class="text-2xl font-semibold text-amber-300 mb-3 text-center">ඔබේ ව්‍යාපාරයට සූර්ය බලය!</h4>
+                    <p class="text-slate-300 text-center">ඔබේ ව්‍යාපාරයට වඩාත්ම ගැලපෙන සූර්ය පද්ධතිය සහ මූල්‍ය ආකෘතිය තෝරාගැනීම සඳහා අපගේ පළපුරුදු වාණිජ බලශක්ති උපදේශකවරුන්ගෙන් නොමිලේ සහ සවිස්තරාත්මක උපදෙස් ලබාගන්න.</p>
+                     <div class="text-center mt-6">
+                        <button onclick="navigateToMainSection('#contact')" class="px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-lg font-semibold rounded-full hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-xl transform hover:scale-105 btn">වාණිජ විසඳුම් සඳහා විමසන්න</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="service-detail-maintenance" class="service-detail-page hidden">
+        <div class="container mx-auto px-6">
+            <button onclick="navigateToMainSection('#services')" class="mb-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-amber-600 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 btn">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                ආපසු සේවාවන් වෙත
+            </button>
+            <h2 class="text-4xl md:text-5xl font-bold text-amber-400 mb-4 text-center">නඩත්තුව සහ අලෙවියෙන් පසු සේවාව</h2>
+            <p class="text-lg text-slate-400 mb-12 max-w-2xl mx-auto text-center">ඔබේ සූර්ය පද්ධතියේ උපරිම කාර්යක්ෂමතාව, ආරක්ෂාව සහ දිගුකාලීන පැවැත්ම තහවුරු කිරීම සඳහා අප පුළුල් පරාසයක නඩත්තු සේවා සහ අලෙවියෙන් පසු සහාය ලබා දෙන්නෙමු.</p>
+
+            <div class="space-y-10 text-slate-300">
+                <div>
+                    <h3 class="text-3xl font-semibold text-orange-400 mb-4 border-b-2 border-orange-400 pb-2">අපගේ නඩත්තු සේවාවන්ට ඇතුළත් වන්නේ:</h3>
+                    <ul class="list-disc list-inside space-y-2 pl-4 text-lg">
+                        <li>සූර්ය පැනල මතුපිට නිසි පරිදි පිරිසිදු කිරීම සහ දෘශ්‍ය පරීක්ෂාව.</li>
+                        <li>ඉන්වර්ටර් සහ අනෙකුත් උපාංගවල ක්‍රියාකාරීත්වය, දෝෂ කේත සහ සම්බන්ධතා පරීක්ෂා කිරීම.</li>
+                        <li>රැහැන් පද්ධති (Wiring), සවිකිරීම් (Mounting Structures) සහ ආරක්ෂක උපාංග පරීක්ෂාව.</li>
+                        <li>පද්ධති කාර්ය සාධනය දුරස්ථව නිරීක්ෂණය (Remote Monitoring) සහ අවශ්‍ය විටදී වාර්තා සැපයීම.</li>
+                        <li>හදිසි අළුත්වැඩියා කිරීම් සහ දෝෂ නිරාකරණය සඳහා කඩිනම් සේවය.</li>
+                        <li>බැටරි පද්ධති (Off-Grid/Hybrid) සඳහා විශේෂිත නඩත්තු සහ සෞඛ්‍ය පරීක්ෂාව.</li>
+                    </ul>
+                </div>
+                 <div class="p-8 rounded-lg glassmorphism">
+                    <h4 class="text-2xl font-semibold text-amber-300 mb-3 text-center">වගකීම් සහතිකය සහ විශ්වාසය:</h4>
+                    <p class="text-slate-300 text-center mb-3">අප විසින් ස්ථාපනය කරනු ලබන සියලුම සූර්ය පැනල සඳහා වසර 25-30 දක්වා කාර්ය සාධන වගකීමක්ද, ඉන්වර්ටර් සඳහා වසර 5-12 දක්වා නිෂ්පාදන වගකීමක්ද හිමිවේ. එමෙන්ම, අපගේ ස්ථාපන සේවාව සඳහාද (Workmanship Warranty) වසර 2-5 දක්වා වගකීමක් ලබාදේ.</p>
+                    <p class="text-slate-300 text-center">ඔබේ වගකීම් කාලය තුළ මෙන්ම ඉන් පසුවද, අවශ්‍ය ඕනෑම තාක්ෂණික සහායක් ලබාදීමට අප සූදානම්.</p>
+                </div>
+                <div>
+                    <h3 class="text-3xl font-semibold text-orange-400 mb-4 border-b-2 border-orange-400 pb-2">ඇයි නඩත්තුව මෙතරම් වැදගත් වන්නේ?</h3>
+                    <p class="mb-3 text-lg">නිසි සහ කාලීන නඩත්තුව මගින්:</p>
+                    <ul class="list-disc list-inside space-y-2 pl-4">
+                        <li>ඔබේ සූර්ය පද්ධතියෙන් උපරිම බලශක්තියක් නිපදවා ගැනීම සහතික කරයි.</li>
+                        <li>පද්ධතියේ ආයු කාලය දීර්ඝ කර, ඔබේ ආයෝජනයේ වටිනාකම සුරකී.</li>
+                        <li>අනපේක්ෂිත අක්‍රීය වීම් සහ විශාල අළුත්වැඩියා වියදම් වළක්වා ගනී.</li>
+                        <li>පද්ධතියේ ආරක්ෂාව තහවුරු කරයි.</li>
+                    </ul>
+                    <p class="mt-4 text-lg">ඔබේ සූර්ය ආයෝජනය සුරක්ෂිත කරගැනීමට සහ එහි උපරිම ප්‍රතිලාභ අඛණ්ඩව ලබාගැනීමට නිරන්තර වෘත්තීය නඩත්තුව අත්‍යවශ්‍ය වේ.</p>
+                     <div class="text-center mt-8">
+                        <button onclick="navigateToMainSection('#contact')" class="px-8 py-3 bg-gradient-to-r from-sky-500 to-blue-600 text-white text-lg font-semibold rounded-full hover:from-sky-600 hover:to-blue-700 transition-all duration-300 shadow-xl transform hover:scale-105 btn">නඩත්තු සේවා සඳහා විමසන්න</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="py-16 bg-slate-950 text-slate-400 text-center clip-path-footer relative pt-24">
+        <div class="container mx-auto px-6">
+            <a href="#" onclick="navigateToMainSection('#hero')" class="text-4xl font-bold mb-6 inline-block cursor-pointer">
+                <span class="text-amber-400 company-name">සූර්ය</span><span class="text-orange-500 company-name">යා</span>
+            </a>
+            <div class="flex justify-center space-x-6 mb-8">
+                <a href="#about" class="nav-footer-link hover:text-amber-400 transition-colors">අප ගැන</a>
+                <a href="#services" class="nav-footer-link hover:text-amber-400 transition-colors">සේවාවන්</a>
+                <a href="#why-choose-us" class="nav-footer-link hover:text-amber-400 transition-colors">අපව තෝරාගැනීම</a>
+                <a href="#" class="nav-footer-link hover:text-amber-400 transition-colors">බ්ලොග් (ළඟදීම)</a>
+            </div>
+            <div class="flex justify-center space-x-6 mb-8">
+                <a href="#" aria-label="Facebook" class="hover:text-amber-400 transition-colors">
+                    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"></path></svg>
+                </a>
+                <a href="#" aria-label="Twitter" class="hover:text-amber-400 transition-colors">
+                    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path></svg>
+                </a>
+                 <a href="#" aria-label="Instagram" class="hover:text-amber-400 transition-colors">
+                     <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.012-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.048-1.024-.06-1.378-.06-3.808s.012-2.784.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.023.047 1.351.058 3.807.058h.468c2.456 0 2.784-.011 3.807-.058.975-.045 1.504-.207-1.857-.344.467-.182.8-.398 1.15-.748.35-.35.566-.683-.748-1.15.137-.353.3-.882.344-1.857.047-1.023.058-1.351.058-3.807v-.468c0-2.456-.011-2.784-.058-3.807-.045-.975-.207-1.504-.344-1.857-.182-.467-.399-.8-.748-1.15-.35-.35-.683-.566-1.15-.748-.353-.137-.882-.3-1.857-.344C14.748 3.813 14.402 3.802 12 3.802zM12 6.865A5.135 5.135 0 1012 17.135 5.135 5.135 0 0012 6.865zm0 8.468A3.333 3.333 0 1112 11.998a3.333 3.333 0 010 3.335zM17.778 6.82a1.2 1.2 0 100-2.4 1.2 1.2 0 000 2.4z" clip-rule="evenodd"></path></svg>
+                </a>
+            </div>
+            <p class="text-sm">&copy; <span id="currentYear"></span> සූර්යයා බලශක්ති විසඳුම්. සියළු හිමිකම් ඇවිරිණි.</p>
+            <p class="text-xs mt-1">නිර්මාණය සහ සංවර්ධනය: ඔබේ නම/සමාගමේ නම - හිතකාමී Gemini සහාය ඇතිව.</p>
+        </div>
+    </footer>
+
+    <button id="back-to-top" class="fixed bottom-6 right-6 bg-amber-500 hover:bg-orange-600 text-white p-3 rounded-full shadow-lg transition-opacity duration-300 opacity-0 pointer-events-none z-40">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+    </button>
+
+
+    <script>
+        // --- Page Loader Script ---
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('page-loader');
+            if (loader) {
+                loader.classList.add('opacity-0');
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 500);
+            }
+        });
+
+        // --- AOS (Animate On Scroll) Initialization Script ---
+        AOS.init({
+            duration: 800,
+            once: true, 
+        });
+
+        // --- Header Scroll Effect Script ---
+        const header = document.getElementById('main-header');
+        const headerHeight = header.offsetHeight; 
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('bg-slate-900', 'bg-opacity-80', 'backdrop-blur-md', 'shadow-lg');
+                header.classList.remove('py-3'); 
+                header.classList.add('py-2');
+            } else {
+                header.classList.remove('bg-slate-900', 'bg-opacity-80', 'backdrop-blur-md', 'shadow-lg');
+                header.classList.remove('py-2');
+                header.classList.add('py-3');
+            }
+        });
+
+        // --- Mobile Menu Toggle Script ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const navLinksMobile = mobileMenu.querySelectorAll('.nav-link-mobile, .nav-link-cta');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        navLinksMobile.forEach(link => {
+            link.addEventListener('click', () => { 
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // --- Navigation and Page Visibility Logic ---
+        const mainContentWrapper = document.getElementById('main-content-wrapper');
+        const serviceDetailPages = document.querySelectorAll('.service-detail-page');
+        const mainSectionsForHighlight = document.querySelectorAll('#main-content-wrapper section[id]');
+
+
+        function showMainPageContent() {
+            mainContentWrapper.classList.remove('hidden');
+            serviceDetailPages.forEach(page => page.classList.add('hidden'));
+        }
+
+        function showSpecificServicePage(serviceIdToShow) {
+            mainContentWrapper.classList.add('hidden');
+            serviceDetailPages.forEach(page => {
+                if (page.id === serviceIdToShow) {
+                    page.classList.remove('hidden');
+                    AOS.refreshHard(); // Re-trigger AOS for newly shown elements
+                } else {
+                    page.classList.add('hidden');
+                }
+            });
+            const targetPageElement = document.getElementById(serviceIdToShow);
+            if (targetPageElement) {
+                targetPageElement.scrollIntoView({ behavior: 'auto', block: 'start' }); // Changed to auto for instant jump
+            }
+        }
+        
+        function handleNavigation(hash, isInitialLoad = false) {
+            const serviceDetailMatch = hash.match(/^#([a-zA-Z0-9-]+)-വിസ്තර$/);
+
+            if (serviceDetailMatch) {
+                const serviceId = serviceDetailMatch[1];
+                const fullServiceId = 'service-detail-' + serviceId;
+                if (document.getElementById(fullServiceId)) {
+                    showSpecificServicePage(fullServiceId);
+                } else {
+                    showMainPageContent(); 
+                    navigateToMainSection('#hero', false); 
+                }
+            } else if (hash && hash !== '#' && document.querySelector(hash)) { 
+                showMainPageContent();
+                const targetElement = document.querySelector(hash);
+                if(targetElement && mainContentWrapper.contains(targetElement)){
+                     // For initial load, jump directly. For subsequent, smooth scroll.
+                     const scrollBehavior = isInitialLoad ? 'auto' : 'smooth';
+                     setTimeout(() => targetElement.scrollIntoView({ behavior: scrollBehavior, block: 'start' }), 0);
+                } else if (!hash || hash === '#') { // Should not happen if hash is valid main section
+                    navigateToMainSection('#hero', false);
+                }
+            } else { 
+                showMainPageContent();
+                 if (hash !== '#hero') { 
+                    navigateToMainSection('#hero', false);
+                 } else if (isInitialLoad) { // Only scroll to hero on initial load if it's the target
+                    document.querySelector('#hero').scrollIntoView({ behavior: 'auto', block: 'start' });
+                 }
+            }
+        }
+
+        function navigateToServicePage(serviceId) {
+            window.location.hash = serviceId + "-വിස්තර";
+        }
+
+        function navigateToMainSection(sectionId = '#hero', updateHistory = true) {
+            if (updateHistory) {
+                window.location.hash = sectionId;
+                 // handleNavigation will be called by hashchange, so no need to call showMainPageContent here
+            } else { 
+                showMainPageContent();
+                const targetElement = document.querySelector(sectionId);
+                if(targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'auto', block: 'start' });
+                }
+            }
+        }
+        
+        window.addEventListener('hashchange', () => handleNavigation(window.location.hash));
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            handleNavigation(window.location.hash || '#hero', true); // Pass true for initialLoad
+
+            const allNavLinks = document.querySelectorAll('#main-header .nav-link, #main-header .nav-link-cta, #main-header .nav-link-mobile, footer .nav-footer-link');
+            allNavLinks.forEach(link => {
+                link.addEventListener('click', function(event) {
+                    const targetHash = this.getAttribute('href');
+                    if (targetHash && targetHash.startsWith('#') && !targetHash.includes('-വിസ്තර')) {
+                        // Let the hashchange event handle the navigation logic
+                        // navigateToMainSection(targetHash); // This might cause double handling
+                    }
+                });
+            });
+        });
+
+        // --- Active Navigation Link Highlighting Script ---
+        const desktopNavLinks = document.querySelectorAll('#main-header .nav-link'); 
+        const mobileNavLinksForHighlight = document.querySelectorAll('#mobile-menu .nav-link-mobile'); 
+
+        window.addEventListener('scroll', () => {
+            if (!mainContentWrapper.classList.contains('hidden')) {
+                let currentSectionId = '';
+                // Use mainSectionsForHighlight which is defined correctly
+                mainSectionsForHighlight.forEach(section => { 
+                    if (mainContentWrapper.contains(section)) { 
+                        const sectionTop = section.offsetTop;
+                        if (pageYOffset >= sectionTop - (headerHeight + 60)) { 
+                            currentSectionId = section.getAttribute('id');
+                        }
+                    }
+                });
+
+                desktopNavLinks.forEach(link => {
+                    link.classList.remove('text-amber-400', 'font-bold');
+                    link.classList.add('text-white'); 
+                    if (link.getAttribute('href') === `#${currentSectionId}`) {
+                        link.classList.add('text-amber-400', 'font-bold');
+                        link.classList.remove('text-white');
+                    }
+                });
+                mobileNavLinksForHighlight.forEach(link => { 
+                    link.classList.remove('text-amber-400', 'bg-slate-700');
+                    link.classList.add('text-white');
+                    if (link.getAttribute('href') === `#${currentSectionId}`) {
+                        link.classList.add('text-amber-400', 'bg-slate-700');
+                        link.classList.remove('text-white');
+                    }
+                });
+            } else { 
+                 desktopNavLinks.forEach(link => {
+                    link.classList.remove('text-amber-400', 'font-bold');
+                    link.classList.add('text-white');
+                 });
+                 mobileNavLinksForHighlight.forEach(link => {
+                    link.classList.remove('text-amber-400', 'bg-slate-700');
+                    link.classList.add('text-white');
+                 });
+            }
+        });
+        
+        // --- p5.js Hero Background Sketch Script (Refined for professional look) ---
+        let heroSketch = function(p) {
+            let stars = [];
+            const numStars = 150; // More, smaller stars for a subtle shimmer
+            let canvasContainer;
+            
+            class Star {
+                constructor(pInstance) {
+                    this.p = pInstance;
+                    this.x = this.p.random(this.p.width);
+                    this.y = this.p.random(this.p.height);
+                    this.size = this.p.random(0.5, 2.5); // Smaller stars
+                    this.alpha = this.p.random(50, 150); // More subtle alpha
+                    this.twinkleSpeed = this.p.random(0.01, 0.05);
+                    this.color = this.p.random([
+                        [255, 223, 0], // Gold
+                        [255, 190, 70], // Light Orange/Amber
+                        [200, 200, 255]  // Faint Blueish White for variety
+                    ]);
+                }
+
+                display() {
+                    // Twinkling effect
+                    let currentAlpha = this.alpha * (0.6 + 0.4 * this.p.sin(this.p.frameCount * this.twinkleSpeed + this.x)); // Add x to offset twinkle
+                    this.p.fill(this.color[0], this.color[1], this.color[2], currentAlpha);
+                    this.p.ellipse(this.x, this.y, this.size, this.size);
+                }
+
+                update() {
+                    // Slowly drift (optional, can be removed for static stars)
+                    this.x += this.p.random(-0.05, 0.05);
+                    this.y += this.p.random(-0.05, 0.05);
+
+                    // Wrap around edges
+                    if (this.x < 0) this.x = this.p.width;
+                    if (this.x > this.p.width) this.x = 0;
+                    if (this.y < 0) this.y = this.p.height;
+                    if (this.y > this.p.height) this.y = 0;
+                }
+            }
+
+            p.setup = function() {
+                canvasContainer = document.getElementById('hero-canvas-container');
+                let cnv = p.createCanvas(canvasContainer.offsetWidth, canvasContainer.offsetHeight);
+                cnv.parent('hero-canvas-container');
+                for (let i = 0; i < numStars; i++) {
+                    stars.push(new Star(p));
+                }
+                p.noStroke();
+            };
+
+            p.draw = function() {
+                p.clear(); 
+                for (let star of stars) {
+                    star.update(); // Update position for drifting
+                    star.display();
+                }
+            };
+            
+            p.windowResized = function() {
+                 if (canvasContainer) {
+                    p.resizeCanvas(canvasContainer.offsetWidth, canvasContainer.offsetHeight);
+                    // Reinitialize stars on resize to fit new dimensions better (optional)
+                    stars = [];
+                     for (let i = 0; i < numStars; i++) {
+                        stars.push(new Star(p));
+                    }
+                 }
+            };
+        };
+        new p5(heroSketch);
+
+        // --- Savings Calculator Logic Script ---
+        const calculatorForm = document.getElementById('savings-calculator-form');
+        const resultsDiv = document.getElementById('savings-results');
+        const efficiencySlider = document.getElementById('system-efficiency');
+        const efficiencyValueSpan = document.getElementById('system-efficiency-value');
+        const savingsVisualizationDiv = document.getElementById('savings-visualization');
+        let savingsSketchInstance = null;
+
+        if (efficiencySlider && efficiencyValueSpan) {
+            efficiencySlider.addEventListener('input', (event) => {
+                efficiencyValueSpan.textContent = event.target.value;
+            });
+        }
+
+        if (calculatorForm) {
+            calculatorForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const currentBill = parseFloat(document.getElementById('current-bill').value);
+                const sunlightHours = parseFloat(document.getElementById('sunlight-hours').value);
+                const systemEfficiency = parseFloat(efficiencySlider.value) / 100;
+
+                if (isNaN(currentBill) || currentBill <= 0) {
+                    resultsDiv.innerHTML = `<p class="text-red-400">කරුණාකර වලංගු මාසික බිලක් ඇතුළත් කරන්න.</p>`;
+                    return;
+                }
+                
+                let estimatedMonthlySavingsLKR = currentBill * (sunlightHours / 5.2) * systemEfficiency * 0.78; 
+                estimatedMonthlySavingsLKR = Math.min(estimatedMonthlySavingsLKR, currentBill * 0.9); 
+                estimatedMonthlySavingsLKR = Math.max(estimatedMonthlySavingsLKR, currentBill * 0.20); 
+
+                const yearlySavingsLKR = estimatedMonthlySavingsLKR * 12;
+
+                resultsDiv.innerHTML = `
+                    <h4 class="text-xl font-semibold text-amber-400 mb-2">ඔබේ ඇස්තමේන්තුගත ඉතිරිය:</h4>
+                    <p class="text-3xl font-bold text-green-400 mb-1">රු. ${estimatedMonthlySavingsLKR.toFixed(0)} <span class="text-lg text-slate-400">/මසකට</span></p>
+                    <p class="text-xl text-slate-300">රු. ${yearlySavingsLKR.toFixed(0)} <span class="text-base text-slate-400">/වසරකට</span></p>
+                `;
+                
+                if (savingsSketchInstance) {
+                    savingsSketchInstance.remove(); 
+                }
+                savingsVisualizationDiv.innerHTML = ''; 
+                savingsSketchInstance = new p5(savingsVisSketch(currentBill, estimatedMonthlySavingsLKR), 'savings-visualization');
+            });
+        }
+        
+        // --- p5.js Savings Visualization Sketch Script ---
+        function savingsVisSketch(totalBill, savedAmount) {
+            return function(p) {
+                let container;
+                p.setup = function() {
+                    container = document.getElementById('savings-visualization');
+                    if (!container) { console.error("Savings visualization container not found!"); return; }
+                    let cnv = p.createCanvas(container.offsetWidth, container.offsetHeight);
+                    cnv.parent('savings-visualization');
+                    p.noLoop(); 
+                };
+
+                p.draw = function() {
+                    if (!container) return;
+                    p.background(51, 65, 85); 
+                    
+                    let billRatio = savedAmount / totalBill;
+                    billRatio = p.constrain(billRatio, 0, 1); 
+
+                    let savedWidth = p.width * billRatio;
+                    let remainingWidth = p.width * (1 - billRatio);
+
+                    p.fill(34, 197, 94); 
+                    p.noStroke();
+                    p.rect(0, 0, savedWidth, p.height);
+                    
+                    p.fill(251, 146, 60); 
+                    p.rect(savedWidth, 0, remainingWidth, p.height);
+
+                    p.fill(255);
+                    p.textSize(p.height * 0.25); 
+                    p.textAlign(p.CENTER, p.CENTER);
+                    if (savedWidth > p.width * 0.15) { 
+                         p.text(`ඉතිරිය: ${ (billRatio * 100).toFixed(0) }%`, savedWidth / 2, p.height / 2);
+                    } else if (remainingWidth > p.width * 0.15 && billRatio > 0.01) { 
+                        p.text(`${ (billRatio * 100).toFixed(0) }%`, savedWidth + remainingWidth/2, p.height/2);
+                    } else if (billRatio < 0.01 && billRatio > 0) { 
+                         p.text(`<1%`, p.width/2, p.height/2);
+                    }
+                };
+                 p.windowResized = function() { 
+                     if (container && container.offsetWidth > 0 && container.offsetHeight > 0) {
+                        p.resizeCanvas(container.offsetWidth, container.offsetHeight);
+                        p.draw(); 
+                     }
+                }
+            };
+        }
+
+        // --- Contact Form Submission Script ---
+        const contactForm = document.getElementById('contact-form');
+        const formStatusDiv = document.getElementById('form-submission-status');
+
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                const name = document.getElementById('contact-name').value;
+                const email = document.getElementById('contact-email').value;
+                const message = document.getElementById('contact-message').value;
+
+                if (!name.trim() || !email.trim() || !message.trim()) { 
+                    formStatusDiv.innerHTML = `<p class="text-red-400">කරුණාකර සියලුම අනිවාර්ය ක්ෂේත්‍ර පුරවන්න.</p>`;
+                    return;
+                }
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailPattern.test(email)) {
+                    formStatusDiv.innerHTML = `<p class="text-red-400">කරුණාකර වලංගු විද්‍යුත් තැපැල් ලිපිනයක් ඇතුළත් කරන්න.</p>`;
+                    return;
+                }
+
+                formStatusDiv.innerHTML = `<p class="text-green-400">ඔබේ පණිවිඩය අප වෙත ලැබුණි! හැකි ඉක්මනින් අපි ඔබව සම්බන්ධ කරගන්නෙමු.</p>`;
+                contactForm.reset(); 
+
+                setTimeout(() => {
+                    formStatusDiv.innerHTML = ''; 
+                }, 6000); 
+            });
+        }
+
+        // --- Footer Current Year Script ---
+        const currentYearSpan = document.getElementById('currentYear');
+        if (currentYearSpan) {
+            currentYearSpan.textContent = new Date().getFullYear();
+        }
+        
+        // --- Back to Top Button Script ---
+        const backToTopButton = document.getElementById('back-to-top');
+        if (backToTopButton) {
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) { 
+                    backToTopButton.classList.remove('opacity-0', 'pointer-events-none'); 
+                    backToTopButton.classList.add('opacity-100');
+                } else {
+                    backToTopButton.classList.remove('opacity-100');
+                    backToTopButton.classList.add('opacity-0', 'pointer-events-none'); 
+                }
+            });
+            backToTopButton.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+    </script>
+</body>
+</html>
